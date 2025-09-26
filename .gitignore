@@ -20,4 +20,3 @@ node_modules/
 *.db
 *.sqlite
 /backend/prisma/*.sqlite
-.env
