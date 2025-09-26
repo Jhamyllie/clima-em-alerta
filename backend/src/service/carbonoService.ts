@@ -1,41 +1,27 @@
-const FATORES_EMISSAO = {
-    ELETRICIDADE_KWH: 0.15,
-    CARRO_KM: 0.23,
-    CARNE_VERMELHA_POR_SEMANA: 15,
-};
+import { Carbono, ICarbono } from "../models/carbono.js";
 
-interface CalculoInput {
-    eletricidadeKwh: number;
-    distanciaCarroKm: number;
-    porcoesCarneSemana: number;
+// Criar cálculo
+export async function criarCalculo(dados: Partial<ICarbono>) {
+  const novo = new Carbono(dados);
+  return await novo.save();
 }
 
-export function calcularEmissoes(dados: CalculoInput): number {
-    const diasNoMes = 30.44;
-
-    const emissaoEletricidade = dados.eletricidadeKwh * FATORES_EMISSAO.ELETRICIDADE_KWH;
-
-    const emissaoTransporte = dados.distanciaCarroKm * FATORES_EMISSAO.CARRO_KM;
-
-    const emissaoAlimentacao = dados.porcoesCarneSemana * FATORES_EMISSAO.CARNE_VERMELHA_POR_SEMANA * (diasNoMes / 7);
-
-    const totalMensal = emissaoEletricidade + emissaoTransporte + emissaoAlimentacao;
-
-    return parseFloat(totalMensal.toFixed(2));
+// Listar todos
+export async function listarCalculos() {
+  return await Carbono.find();
 }
 
-export function obterRecomendacoes(emissaoTotal: number): string[] {
-    const sugestoes: string[] = [];
+// Buscar por ID
+export async function buscarCalculoPorId(id: string) {
+  return await Carbono.findById(id);
+}
 
-    if (emissaoTotal > 500) {
-        sugestoes.push("Sua emissão é alta. Considere usar mais transporte público ou **caronas solidárias** (como recomendado no projeto).");
-    }
+// Atualizar
+export async function atualizarCalculo(id: string, dados: Partial<ICarbono>) {
+  return await Carbono.findByIdAndUpdate(id, dados, { new: true });
+}
 
-    if (emissaoTotal > 300) {
-        sugestoes.push("Tente reduzir o consumo de eletricidade e verifique se seus eletrodomésticos são eficientes.");
-    }
-
-    sugestoes.push("Para compensar: Considere plantar 5 árvores. (A compensação local é fundamental para Brejões/BA).");
-
-    return sugestoes;
+// Deletar
+export async function deletarCalculo(id: string) {
+  return await Carbono.findByIdAndDelete(id);
 }
