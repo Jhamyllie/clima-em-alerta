@@ -1,27 +1,47 @@
-import { Carbono, ICarbono } from "../models/carbono.js";
+import CarbonoModel, { ICarbono } from "../models/carbono.js";
 
-// Criar cálculo
-export async function criarCalculo(dados: Partial<ICarbono>) {
-  const novo = new Carbono(dados);
-  return await novo.save();
+interface CalculoInput {
+  eletricidadeKWh: number;
+  distanciaCarroKm: number;
+  porcoesCarneSemana: number;
 }
 
-// Listar todos
-export async function listarCalculos() {
-  return await Carbono.find();
-}
+export const criarCalculo = async (input: CalculoInput): Promise<ICarbono> => {
+  const { eletricidadeKWh, distanciaCarroKm, porcoesCarneSemana } = input;
 
-// Buscar por ID
-export async function buscarCalculoPorId(id: string) {
-  return await Carbono.findById(id);
-}
+  // Fórmula de cálculo (ajuste conforme sua regra de negócio)
+  const emissaoTotal =
+    eletricidadeKWh * 0.1 + distanciaCarroKm * 0.2 + porcoesCarneSemana * 1.5;
 
-// Atualizar
-export async function atualizarCalculo(id: string, dados: Partial<ICarbono>) {
-  return await Carbono.findByIdAndUpdate(id, dados, { new: true });
-}
+  const sugestoes: string[] = [];
+  if (eletricidadeKWh > 200) sugestoes.push("Reduza o consumo de energia elétrica");
+  if (distanciaCarroKm > 100) sugestoes.push("Considere usar transporte público ou bicicleta");
+  if (porcoesCarneSemana > 3) sugestoes.push("Reduza o consumo de carne vermelha");
 
-// Deletar
-export async function deletarCalculo(id: string) {
-  return await Carbono.findByIdAndDelete(id);
-}
+  const novo = new CarbonoModel({
+    eletricidadeKWh,
+    distanciaCarroKm,
+    porcoesCarneSemana,
+    emissaoTotal,
+    sugestoes
+  });
+
+  await novo.save();
+  return novo;
+};
+
+export const listarCalculos = async () => {
+  return await CarbonoModel.find();
+};
+
+export const buscarCalculoPorId = async (id: string) => {
+  return await CarbonoModel.findById(id);
+};
+
+export const atualizarCalculo = async (id: string, dados: Partial<ICarbono>) => {
+  return await CarbonoModel.findByIdAndUpdate(id, dados, { new: true });
+};
+
+export const deletarCalculo = async (id: string) => {
+  return await CarbonoModel.findByIdAndDelete(id);
+};

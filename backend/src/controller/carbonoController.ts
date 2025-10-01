@@ -1,9 +1,24 @@
 import { Request, Response } from "express";
-import { criarCalculo, listarCalculos, buscarCalculoPorId, atualizarCalculo, deletarCalculo } from "../service/carbonoService.js";
+import {
+  criarCalculo,
+  listarCalculos,
+  buscarCalculoPorId,
+  atualizarCalculo,
+  deletarCalculo
+} from "../service/carbonoService.js";
 
-// Criar cálculo
 export const criarCalculoController = async (req: Request, res: Response) => {
   try {
+    const { eletricidadeKWh, distanciaCarroKm, porcoesCarneSemana } = req.body;
+
+    if (
+      eletricidadeKWh === undefined ||
+      distanciaCarroKm === undefined ||
+      porcoesCarneSemana === undefined
+    ) {
+      return res.status(400).json({ sucesso: false, mensagem: "Dados incompletos" });
+    }
+
     const novo = await criarCalculo(req.body);
     return res.status(201).json({ sucesso: true, calculo: novo });
   } catch (error) {
@@ -12,8 +27,7 @@ export const criarCalculoController = async (req: Request, res: Response) => {
   }
 };
 
-// Listar todos
-export const listarCalculosController = async (req: Request, res: Response) => {
+export const listarCalculosController = async (_req: Request, res: Response) => {
   try {
     const lista = await listarCalculos();
     return res.json({ sucesso: true, calculos: lista });
@@ -23,7 +37,6 @@ export const listarCalculosController = async (req: Request, res: Response) => {
   }
 };
 
-// Buscar por ID
 export const buscarCalculoPorIdController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -40,7 +53,6 @@ export const buscarCalculoPorIdController = async (req: Request, res: Response) 
   }
 };
 
-// Atualizar
 export const atualizarCalculoController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -57,7 +69,6 @@ export const atualizarCalculoController = async (req: Request, res: Response) =>
   }
 };
 
-// Deletar
 export const deletarCalculoController = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

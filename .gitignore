@@ -1,22 +1,4 @@
 # Ignora pastas de módulos para AMBOS os projetos
 node_modules/
-
-# 1. IGNORAR COMPLETAMENTE O FRONTEND
-# Isso garante que tudo que estiver dentro de frontend/ não será rastreado
-/frontend/
-
-# 2. Ignorar arquivos de configuração e temporários do IDE (VS Code)
-.vscode/
-
-# 3. Ignorar logs e builds do backend
-/backend/dist/
-/backend/logs/
-
-# 4. Arquivos de Ambiente (Segurança!)
 .env
-
-# 5. Arquivos de banco de dados (SQLite)
-# Se você estiver usando um banco de dados local como o SQLite
-*.db
-*.sqlite
-/backend/prisma/*.sqlite
+frontend/

@@ -14,8 +14,8 @@ const CarbonoSchema: Schema = new Schema({
   distanciaCarroKm: { type: Number, required: true },
   porcoesCarneSemana: { type: Number, required: true },
   emissaoTotal: { type: Number, required: true },
-  sugestoes: [{ type: String }],
+  sugestoes: { type: [String], default: [] },
   criadoEm: { type: Date, default: Date.now }
 });
 
-export const Carbono = mongoose.model<ICarbono>("Carbono", CarbonoSchema);
+export default mongoose.model<ICarbono>("Carbono", CarbonoSchema);
